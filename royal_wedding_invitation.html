@@ -52,17 +52,18 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: none;
   overflow-y: scroll;
 }
 
-/* Door page locked state: strictly unscrollable until opened via button */
+/* Door page locked state: strictly unscrollable until Ganesha finishes & castle opens */
 html.doors-locked,
 body.doors-locked {
   overflow: hidden !important;
   height: 100vh !important;
   height: 100dvh !important;
   touch-action: none;
+  cursor: pointer;
 }
 
 body.doors-locked .royal-ceremony-nav {
@@ -106,7 +107,7 @@ body {
 #intro {
   height: 100vh;
   height: 100dvh;
-  min-height: 100vh;
+  min-height: 0;
   max-height: 100vh;
   max-height: 100dvh;
   position: relative;
@@ -481,14 +482,20 @@ body {
 }
 
 .mahal-cutout-img {
-  width: 100%;
+  width: min(100%, 146dvh);
   height: auto;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   object-position: bottom center;
   filter: drop-shadow(0 -8px 24px rgba(255, 195, 115, 0.42)) saturate(1.06);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, 0.55) 95%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, 0.55) 95%, transparent 100%);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%),
+    linear-gradient(to bottom, #000 0%, #000 90%, rgba(0, 0, 0, 0.55) 97%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%),
+    linear-gradient(to bottom, #000 0%, #000 90%, rgba(0, 0, 0, 0.55) 97%, transparent 100%);
+  mask-composite: intersect;
 }
 
 /* Celebratory Royal Crackers / Fireworks Canvas over Mahal Sky */
@@ -506,10 +513,10 @@ body {
   display: none !important;
 }
 
-/* Beautiful cinematic reveal centered right above / on the palace facade */
+/* Beautiful cinematic reveal centered in open sunset sky right above the palace */
 .door-reveal-content {
   position: absolute;
-  top: 40%;
+  top: 32%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.35);
   z-index: 5;
@@ -649,16 +656,19 @@ body {
 
 @media (max-width: 768px) {
   .mahal-cutout-img {
-    width: 195%;
+    width: 170%;
     max-width: none;
-    max-height: 60vh;
+    max-height: 45dvh;
+    height: auto;
+    object-fit: contain;
+    object-position: bottom center;
   }
   .door-reveal-content {
-    width: 95%;
-    top: 41%;
+    width: 88%;
+    top: 38%;
   }
   .castle-names {
-    font-size: 48px;
+    font-size: clamp(42px, 11vw, 52px);
   }
   .castle-subline {
     font-size: 15px;
@@ -678,20 +688,17 @@ body {
 /* ============================================================
    FULLSCREEN CEREMONY SECTIONS (ORIGINAL ARTWORK PRESERVED)
    ============================================================ */
-/* Pure Royal Full-Screen Ceremony Cards with Smooth Snapping */
+/* Pure Continuous Scrollable Ceremony Cards (Tight Balanced Spacing) */
 .fullscreen-event-section {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 0;
   height: auto;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 54px 18px;
+  padding: 40px 18px;
   overflow: visible;
   box-sizing: border-box;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   background: transparent !important;
 }
 
@@ -727,8 +734,9 @@ body {
   display: none !important;
 }
 
-/* Sacred Minute Flower Shower Canvas - Only active on Ramayan Path */
-.ramayan-flower-canvas {
+/* Sacred Minute Flower Shower Canvas - Active on Ramayan Path & Sangeet/Jaggo */
+.ramayan-flower-canvas,
+.ceremony-flower-canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -741,9 +749,71 @@ body {
   transition: opacity 0.65s ease, visibility 0.65s;
 }
 
-#section-ramayan.in-view .ramayan-flower-canvas {
+#section-ramayan.in-view .ramayan-flower-canvas,
+#section-sangeet.in-view .ceremony-flower-canvas {
   opacity: 1;
   visibility: visible;
+}
+
+/* ============================================================
+   SUNSET TERRACE ARTWORK LAYER (SANGEET & JAGGO + ROYAL WEDDING)
+   Softly feathered into the continuous sunset sky backdrop
+   ============================================================ */
+.sunset-terrace-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  will-change: opacity, transform;
+}
+
+.sunset-terrace-img {
+  width: min(100vw, 84vh);
+  height: auto;
+  max-height: 98%;
+  display: block;
+  object-fit: contain;
+  object-position: bottom center;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 18%, #000 44%, #000 92%, rgba(0, 0, 0, 0.5) 98%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 18%, #000 44%, #000 92%, rgba(0, 0, 0, 0.5) 98%, transparent 100%);
+  mask-composite: intersect;
+}
+
+@media (max-width: 768px) {
+  .sunset-terrace-img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    object-position: center bottom;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.42) 16%,
+      #000 38%,
+      #000 92%,
+      rgba(0, 0, 0, 0.5) 98%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.42) 16%,
+      #000 38%,
+      #000 92%,
+      rgba(0, 0, 0, 0.5) 98%,
+      transparent 100%
+    );
+  }
 }
 
 /* ============================================================
@@ -1155,8 +1225,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: clamp(6px, 2vw, 12px);
+  flex-wrap: nowrap;
 }
 
 .script-name {
@@ -1235,6 +1305,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  gap: 10px;
   font-family: 'Montserrat', sans-serif;
   font-size: 12.5px;
   font-weight: 600;
@@ -1249,14 +1320,14 @@ body {
 
 .schedule-item-label {
   text-align: left;
+  flex-shrink: 0;
 }
 
 .schedule-item-time {
   text-align: right;
   color: var(--gold-antique);
   font-weight: 700;
-  letter-spacing: 0.12em;
-  white-space: nowrap;
+  letter-spacing: 0.1em;
   text-shadow: var(--subtle-shadow-gold);
 }
 
@@ -1267,7 +1338,7 @@ body {
   color: var(--text-ivory-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin: -2px 0 8px;
+  margin: -1px 0 6px;
   text-align: center;
   text-shadow: var(--subtle-shadow-text);
 }
@@ -1728,9 +1799,9 @@ body {
 
 @media (max-width: 768px) {
   .royal-ceremony-nav {
-    right: 8px;
-    padding: 8px 6px;
-    gap: 10px;
+    right: 6px;
+    padding: 7px 5px;
+    gap: 8px;
   }
   .royal-ceremony-nav .nav-dot {
     width: 7px;
@@ -1747,194 +1818,184 @@ body {
   }
 }
 
-
-/* Balanced Vertical Alignment for Sangeet & Wedding Stages */
-#section-sangeet .event-stage,
-#section-wedding .event-stage {
-  padding: clamp(24px, 4vh, 48px) 18px !important;
-  margin: auto !important;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .ceremony-top-flourish {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 8px;
+  display: none !important;
 }
-
-@media (max-width: 768px) {
-  #section-sangeet .event-stage,
-  #section-wedding .event-stage {
-    padding: 18px 12px !important;
-    gap: 4px;
-  }
-  
-  #section-sangeet .ceremony-title-heading,
-  #section-wedding .ceremony-title-heading {
-    font-size: 22px !important;
-    letter-spacing: 0.16em !important;
-    margin-bottom: 4px !important;
-  }
-
-  #section-sangeet .script-name,
-  #section-wedding .script-name {
-    font-size: 42px !important;
-    line-height: 1.05 !important;
-  }
-
-  #section-sangeet .couple-showcase,
-  #section-wedding .couple-showcase {
-    margin: 6px 0 10px !important;
-  }
-
-  #section-sangeet .event-program-box,
-  #section-wedding .event-program-box {
-    margin: 8px auto 0 !important;
-    padding: 10px 14px !important;
-  }
-
-  #section-sangeet .program-date-title,
-  #section-wedding .program-date-title {
-    font-size: 12.5px !important;
-    margin-bottom: 5px !important;
-  }
-
-  #section-sangeet .schedule-item,
-  #section-wedding .schedule-item {
-    font-size: 11px !important;
-    margin-bottom: 4px !important;
-  }
-
-  #section-sangeet .venue-main-title,
-  #section-wedding .venue-main-title {
-    font-size: 14px !important;
-    letter-spacing: 0.12em !important;
-  }
-
-  #section-wedding .wedding-final-blessings {
-    margin-top: 10px !important;
-    padding-top: 8px !important;
-  }
-}
-
-
-/* Wedding Page Vertical Positioning: Bring Text Down */
-#section-wedding .event-stage {
-  transform: translateY(28px);
-  padding-top: clamp(30px, 5vh, 50px) !important;
-}
-
-@media (max-width: 768px) {
-  #section-wedding .event-stage {
-    transform: translateY(22px) !important;
-    padding-top: 18px !important;
-  }
-  
-  #section-wedding .wedding-final-blessings {
-    margin-top: 8px !important;
-    padding-top: 6px !important;
-  }
-}
-
 
 /* ============================================================
-   TRUE CENTER ALIGNMENT FOR CEREMONY STAGES
+   DECENT LINE-BASED GOLDEN WEDDING BORDER DIVIDERS
+   Light, graceful gold line filigree between Ramayan Path, Sangeet & Wedding
+   ============================================================ */
+.wedding-ornate-divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 24px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 4;
+  pointer-events: none;
+  box-sizing: border-box;
+  will-change: opacity, transform;
+}
+
+.ornate-divider-svg {
+  width: min(84vw, 440px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 1px 4px rgba(65, 6, 18, 0.65))
+          drop-shadow(0 0 8px rgba(255, 215, 115, 0.35));
+}
+
+@media (max-width: 768px) {
+  .wedding-ornate-divider {
+    padding: 4px 26px;
+  }
+  .ornate-divider-svg {
+    width: min(78vw, 310px);
+  }
+}
+
+/* ============================================================
+   DEDICATED SINGLE-PAGE VIEWPORT PER CEREMONY + BALANCED SPACING
+   Keeps Ramayan Path, Sangeet & Jaggo, and Wedding each cleanly on their own page
    ============================================================ */
 #section-ramayan,
-#section-sangeet {
+#section-sangeet,
+#section-wedding {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  height: 100vh !important;
-  height: 100dvh !important;
-  min-height: 100vh !important;
-  max-height: 100vh !important;
-  max-height: 100dvh !important;
-  padding: 16px 12px !important;
+  min-height: 90vh !important;
+  min-height: 90dvh !important;
+  height: auto !important;
+  max-height: none !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
 }
 
+#section-ramayan {
+  padding: clamp(68px, 9vh, 92px) 24px 24px !important;
+}
+
+#section-sangeet {
+  justify-content: flex-start !important;
+  min-height: 96vh !important;
+  min-height: 96dvh !important;
+  padding: clamp(32px, 5vh, 52px) 24px clamp(210px, 34vh, 300px) !important;
+}
+
+#section-wedding {
+  justify-content: flex-start !important;
+  min-height: 98vh !important;
+  min-height: 98dvh !important;
+  padding: clamp(28px, 4.5vh, 46px) 24px clamp(210px, 34vh, 300px) !important;
+}
+
 #section-ramayan .event-stage,
-#section-sangeet .event-stage {
+#section-sangeet .event-stage,
+#section-wedding .event-stage {
+  width: 100%;
+  max-width: 540px;
   margin: auto !important;
+  padding: clamp(20px, 3vh, 34px) 22px !important;
+  position: relative;
+  z-index: 6;
   align-self: center !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  transform: none !important;
+  will-change: transform, opacity;
+}
+
+#section-sangeet .event-stage,
+#section-wedding .event-stage {
+  margin: 0 auto !important;
+}
+
+#intro .door-reveal-scene {
+  will-change: opacity, transform;
 }
 
 @media (max-width: 768px) {
   #section-ramayan,
+  #section-sangeet,
+  #section-wedding {
+    min-height: 92dvh !important;
+  }
+
+  #section-ramayan {
+    padding: 64px 26px 20px !important;
+  }
+
   #section-sangeet {
-    padding: 12px 8px !important;
-    justify-content: center !important;
-    align-items: center !important;
+    min-height: 98dvh !important;
+    padding: 36px 26px clamp(190px, 32dvh, 250px) !important;
+  }
+
+  #section-wedding {
+    min-height: 100dvh !important;
+    padding: 28px 26px clamp(185px, 31dvh, 240px) !important;
   }
 
   #section-ramayan .event-stage,
-  #section-sangeet .event-stage {
-    margin: auto !important;
-    align-self: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-  }
-}
-
-
-/* ============================================================
-   CINEMATIC CENTER ZOOM-IN REVEAL FOR ALL CEREMONY CARDS
-   (Matches the Castle Page Center Zoom-In Experience)
-   ============================================================ */
-.fullscreen-event-section .event-stage {
-  opacity: 0;
-  transform: scale(0.32);
-  filter: blur(6px);
-  transition: opacity 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s,
-              transform 2.2s cubic-bezier(0.18, 0.85, 0.3, 1) 0.15s,
-              filter 1.6s ease 0.15s;
-  will-change: transform, opacity, filter;
-}
-
-.fullscreen-event-section.in-view .event-stage {
-  opacity: 1;
-  transform: scale(1);
-  filter: blur(0px);
-}
-
-/* Wedding page center zoom with slight vertical offset */
-#section-wedding .event-stage {
-  opacity: 0;
-  transform: translateY(24px) scale(0.32);
-  filter: blur(6px);
-  transition: opacity 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s,
-              transform 2.2s cubic-bezier(0.18, 0.85, 0.3, 1) 0.15s,
-              filter 1.6s ease 0.15s;
-}
-
-#section-wedding.in-view .event-stage {
-  opacity: 1;
-  transform: translateY(24px) scale(1);
-  filter: blur(0px);
-}
-
-@media (max-width: 768px) {
+  #section-sangeet .event-stage,
   #section-wedding .event-stage {
-    transform: translateY(18px) scale(0.32);
+    padding: 18px 10px !important;
+    gap: 5px;
   }
-  #section-wedding.in-view .event-stage {
-    transform: translateY(18px) scale(1);
+
+  .fullscreen-event-section .ceremony-title-heading {
+    font-size: clamp(21px, 5.8vw, 26px) !important;
+    letter-spacing: 0.16em !important;
+    margin-bottom: 4px !important;
+  }
+
+  .fullscreen-event-section .script-name {
+    font-size: clamp(38px, 10.5vw, 48px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .fullscreen-event-section .couple-showcase {
+    margin: 8px 0 12px !important;
+  }
+
+  .fullscreen-event-section .event-program-box {
+    margin: 10px auto 0 !important;
+    padding: 6px 6px !important;
+    max-width: 380px !important;
+  }
+
+  .fullscreen-event-section .program-date-title {
+    font-size: 13px !important;
+    letter-spacing: 0.13em !important;
+    margin-bottom: 7px !important;
+  }
+
+  .fullscreen-event-section .schedule-item {
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+    margin-bottom: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .fullscreen-event-section .program-venue-block {
+    margin-top: 10px !important;
+    padding-top: 8px !important;
+  }
+
+  .fullscreen-event-section .venue-main-title {
+    font-size: 14.5px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  #section-wedding .wedding-final-blessings {
+    margin-top: 12px !important;
+    padding-top: 10px !important;
   }
 }
 
@@ -1950,7 +2011,7 @@ body {
 <!-- ============================================================
      SCREEN 0: ROYAL PALACE DOORS (ROYAL RED & 24K GOLD)
      ============================================================ -->
-<section id="intro" aria-label="Royal Palace Gate Entrance">
+<section id="intro" aria-label="Royal Palace Gate Entrance" onclick="if (!doorsOpened) openPalaceDoors(false)">
   <div class="door left"></div>
   <div class="door right"></div>
 
@@ -1961,7 +2022,7 @@ body {
     </div>
     
     <button class="btn-open-palace" id="btn-open-palace" onclick="openPalaceDoors(false)">
-      Open The Royal Doors
+      Open The Door
     </button>
   </div>
 
@@ -2136,11 +2197,62 @@ body {
 </div>
 </section>
 
+<!-- Shared Royal Line-Based Golden Border & Corner Floral Graphic Symbols -->
+<svg aria-hidden="true" style="position:absolute; width:0; height:0; overflow:hidden;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="royalBorderGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e8b85a" stop-opacity="0"/>
+      <stop offset="14%" stop-color="#ffd277" stop-opacity="0.92"/>
+      <stop offset="50%" stop-color="#fff4cc" stop-opacity="1"/>
+      <stop offset="86%" stop-color="#ffd277" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#e8b85a" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Delicate line-art half scrollwork (mirrored symmetrically left & right) -->
+    <g id="royalLineHalfBranch">
+      <path d="M276 22 C260 10, 238 8, 224 16 C214 21, 206 18, 208 11 C210 6, 217 7, 216 12"
+            fill="none" stroke="url(#royalBorderGold)" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M244 22 C226 32, 202 32, 186 22 C174 14, 158 14, 152 20 C148 24, 154 27, 157 23"
+            fill="none" stroke="url(#royalBorderGold)" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M188 22 C168 30, 140 28, 124 22 C110 17, 94 18, 86 22"
+            fill="none" stroke="url(#royalBorderGold)" stroke-width="1.05" stroke-linecap="round"/>
+      <circle cx="198" cy="22" r="1.4" fill="#fff4cc"/>
+    </g>
+
+    <!-- Decent Line-Based Golden Wedding Border -->
+    <symbol id="weddingOrnateBorder" viewBox="0 0 600 44">
+      <line x1="20" y1="22" x2="282" y2="22" stroke="url(#royalBorderGold)" stroke-width="1.15"/>
+      <line x1="318" y1="22" x2="580" y2="22" stroke="url(#royalBorderGold)" stroke-width="1.15"/>
+      <!-- Fine lined central diamond & filigree petals -->
+      <polygon points="300,11 311,22 300,33 289,22" fill="none" stroke="url(#royalBorderGold)" stroke-width="1.35"/>
+      <polygon points="300,17 305,22 300,27 295,22" fill="#fff4cc"/>
+      <path d="M289 22 C284 14, 276 14, 274 22 C276 30, 284 30, 289 22" fill="none" stroke="url(#royalBorderGold)" stroke-width="1.15"/>
+      <path d="M311 22 C316 14, 324 14, 326 22 C324 30, 316 30, 311 22" fill="none" stroke="url(#royalBorderGold)" stroke-width="1.15"/>
+      <use href="#royalLineHalfBranch"/>
+      <use href="#royalLineHalfBranch" transform="translate(600, 0) scale(-1, 1)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wedding-ornate-divider" aria-hidden="true">
+  <svg class="ornate-divider-svg" viewBox="0 0 600 44">
+    <use href="#weddingOrnateBorder"/>
+  </svg>
+</div>
+
 <!-- ============================================================
      FULL-SCREEN EVENT 2: SANGEET CEREMONY & JAGGO (28 NOV 2026)
      ============================================================ -->
 <section class="fullscreen-event-section" id="section-sangeet">
   <div class="section-bg-layer" aria-hidden="true"></div>
+
+  <!-- Sunset Terrace & Couple Silhouette Artwork -->
+  <div class="sunset-terrace-layer" aria-hidden="true">
+    <img src="image/Sunset_terrace.png" class="sunset-terrace-img" alt="" />
+  </div>
+
+  <!-- Minute Falling Flowers Canvas (Pushpa Vrishti for Sangeet & Jaggo) -->
+  <canvas id="sangeetFlowerShower" class="ceremony-flower-canvas" aria-hidden="true"></canvas>
   <div class="section-chandelier-bar" aria-hidden="true">
     <svg class="chandelier-svg" viewBox="0 0 100 130">
       <line x1="50" y1="0" x2="50" y2="40" stroke="#d4a34b" stroke-width="2" stroke-dasharray="2,3"/>
@@ -2230,7 +2342,7 @@ body {
         </div>
         <div class="schedule-subnote">AT RESIDENCE: #509, PHASE-4, MOHALI</div>
 
-        <div class="schedule-item" style="margin-top: 8px;">
+        <div class="schedule-item" style="margin-top: 4px;">
           <span class="schedule-item-label">SANGEET</span>
           <span class="schedule-item-time">7:00 PM</span>
         </div>
@@ -2246,11 +2358,22 @@ body {
 </div>
 </section>
 
+<div class="wedding-ornate-divider" aria-hidden="true">
+  <svg class="ornate-divider-svg" viewBox="0 0 600 44">
+    <use href="#weddingOrnateBorder"/>
+  </svg>
+</div>
+
 <!-- ============================================================
      FULL-SCREEN EVENT 3: THE ROYAL WEDDING & RECEPTION (2 DEC 2026)
      ============================================================ -->
 <section class="fullscreen-event-section" id="section-wedding">
   <div class="section-bg-layer" aria-hidden="true"></div>
+
+  <!-- Sunset Terrace & Couple Silhouette Artwork -->
+  <div class="sunset-terrace-layer" aria-hidden="true">
+    <img src="image/Sunset_terrace.png" class="sunset-terrace-img" alt="" />
+  </div>
   <div class="section-chandelier-bar" aria-hidden="true">
     <svg class="chandelier-svg" viewBox="0 0 100 130">
       <line x1="50" y1="0" x2="50" y2="40" stroke="#d4a34b" stroke-width="2" stroke-dasharray="2,3"/>
@@ -2614,6 +2737,13 @@ function openPalaceDoors(immediateScroll = false) {
   window.addEventListener('resize', resize, { passive: true });
 })();
 
+// Click or tap anywhere on the door page opens the doors
+document.addEventListener('click', () => {
+  if (!doorsOpened) {
+    openPalaceDoors(false);
+  }
+});
+
 // Strict Door & Intro Lock: Keep unscrollable until Ganesha reveal completes and Castle page arrives
 window.addEventListener('wheel', (e) => {
   if (!scrollUnlocked) {
@@ -2705,12 +2835,12 @@ function shareWhatsApp(type) {
 }
 
 // ============================================================
-// SACRED MINUTE FLOWER SHOWER ENGINE (RAMAYAN PATH PAGE)
-// Delicate, fluttering rose, marigold & jasmine petals showering from top
+// REUSABLE SACRED MINUTE FLOWER SHOWER ENGINE
+// Powers falling blossoms on Ramayan Path and Sangeet & Jaggo
 // ============================================================
-(function initRamayanFlowerShower() {
-  const canvas = document.getElementById('ramayanFlowerShower');
-  const section = document.getElementById('section-ramayan');
+function createSectionFlowerShower(canvasId, sectionId, colors, count) {
+  const canvas = document.getElementById(canvasId);
+  const section = document.getElementById(sectionId);
   if (!canvas || !section) return;
 
   const ctx = canvas.getContext('2d');
@@ -2730,18 +2860,6 @@ function shareWhatsApp(type) {
     ctx.scale(dpr, dpr);
   }
 
-  // Pre-configured delicate palette: Sacred Marigold, Rose, Jasmine
-  const PETAL_COLORS = [
-    '#f4728e', // Soft celebratory rose
-    '#ff4081', // Radiant rose pink
-    '#f8bbd0', // Delicate blush rose
-    '#ffa726', // Sacred marigold orange
-    '#ffb300', // Saffron gold marigold
-    '#ffd54f', // Warm amber petal
-    '#fff9c4', // Jasmine ivory floret
-    '#ffffff'  // Pure sacred mogra
-  ];
-
   class MinutePetal {
     constructor(isInitial = false) {
       this.reset(isInitial);
@@ -2750,7 +2868,6 @@ function shareWhatsApp(type) {
     reset(isInitial = false) {
       this.x = Math.random() * width;
       this.y = isInitial ? Math.random() * height : -15 - Math.random() * 25;
-      // Minute size: 3.5px to 8px
       this.size = 3.5 + Math.random() * 4.8;
       this.speedY = 0.85 + Math.random() * 1.35;
       this.speedX = (Math.random() - 0.5) * 0.45;
@@ -2761,7 +2878,7 @@ function shareWhatsApp(type) {
       this.flipSpeed = 0.025 + Math.random() * 0.045;
       this.rotation = Math.random() * Math.PI * 2;
       this.rotationSpeed = (Math.random() - 0.5) * 0.035;
-      this.color = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
+      this.color = colors[Math.floor(Math.random() * colors.length)];
       this.type = Math.floor(Math.random() * 3); // 0: Rose petal, 1: Marigold petal, 2: Jasmine floret
       this.opacity = 0.65 + Math.random() * 0.3;
     }
@@ -2782,12 +2899,10 @@ function shareWhatsApp(type) {
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.rotation);
-      // 3D tumbling flip effect
       ctx.scale(Math.cos(this.flipAngle), 1);
       ctx.globalAlpha = this.opacity;
 
       if (this.type === 0) {
-        // Delicate curved rose petal
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.moveTo(0, -this.size);
@@ -2795,13 +2910,11 @@ function shareWhatsApp(type) {
         ctx.bezierCurveTo(-this.size * 0.75, this.size * 0.85, -this.size * 0.85, -this.size * 0.3, 0, -this.size);
         ctx.fill();
       } else if (this.type === 1) {
-        // Golden elongated marigold petal
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.ellipse(0, 0, this.size * 0.45, this.size, 0, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        // Minute 5-petal jasmine floret
         ctx.fillStyle = this.color;
         const petRadius = this.size * 0.35;
         const petDist = this.size * 0.55;
@@ -2821,13 +2934,11 @@ function shareWhatsApp(type) {
     }
   }
 
-  // Count: 48 delicate minute petals
   const petals = [];
-  const PETAL_COUNT = 48;
 
   function initPetals() {
     petals.length = 0;
-    for (let i = 0; i < PETAL_COUNT; i++) {
+    for (let i = 0; i < count; i++) {
       petals.push(new MinutePetal(true));
     }
   }
@@ -2835,12 +2946,10 @@ function shareWhatsApp(type) {
   function loop() {
     if (!isActive) return;
     ctx.clearRect(0, 0, width, height);
-
     for (let i = 0; i < petals.length; i++) {
       petals[i].update();
       petals[i].draw();
     }
-
     animationFrameId = requestAnimationFrame(loop);
   }
 
@@ -2860,7 +2969,6 @@ function shareWhatsApp(type) {
     }
   }
 
-  // Trigger when Ramayan Path section is in view
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -2869,47 +2977,146 @@ function shareWhatsApp(type) {
         stop();
       }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.08 });
 
   observer.observe(section);
-
   window.addEventListener('resize', () => {
     if (isActive) resize();
-  });
-})();
+  }, { passive: true });
+}
+
+createSectionFlowerShower('ramayanFlowerShower', 'section-ramayan', [
+  '#f4728e', '#ff4081', '#f8bbd0', '#ffa726', '#ffb300', '#ffd54f', '#fff9c4', '#ffffff'
+], 48);
+
+createSectionFlowerShower('sangeetFlowerShower', 'section-sangeet', [
+  '#ffa726', '#ffb300', '#ffd54f', '#ec407a', '#f06292', '#f8bbd0', '#fff9c4', '#ff7096'
+], 50);
 </script>
 <script>
-// Active navigation pill synchronization on scroll
+// Smooth scroll-linked fade-out / fade-in transitions & nav synchronization
 document.addEventListener('DOMContentLoaded', () => {
   const navPills = document.querySelectorAll('.royal-ceremony-nav .nav-pill');
   const sections = document.querySelectorAll('#intro, .fullscreen-event-section');
+  const eventSections = document.querySelectorAll('.fullscreen-event-section');
+  const dividers = document.querySelectorAll('.wedding-ornate-divider');
+  const introEl = document.getElementById('intro');
+  const doorRevealScene = introEl ? introEl.querySelector('.door-reveal-scene') : null;
+  let rafScheduled = false;
 
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.25
-  };
+  function clamp01(val) {
+    return val < 0 ? 0 : val > 1 ? 1 : val;
+  }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        const id = entry.target.id;
-        navPills.forEach(pill => {
-          if (pill.getAttribute('data-target') === id) {
-            pill.classList.add('active');
-          } else {
-            pill.classList.remove('active');
-          }
-        });
+  function smoothstep(t) {
+    const x = clamp01(t);
+    return x * x * (3 - 2 * x);
+  }
+
+  function updateScrollTransitions() {
+    rafScheduled = false;
+    const vh = window.innerHeight || document.documentElement.clientHeight || 800;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
+    const nearBottomProgress = maxScroll > 0 ? clamp01((window.scrollY - (maxScroll - 120)) / 120) : 0;
+
+    // 1. Gradual smooth fade-out of Castle page as user scrolls down
+    if (doorRevealScene) {
+      if (introEl && introEl.classList.contains('castle-active') && typeof scrollUnlocked !== 'undefined' && scrollUnlocked) {
+        const rawProgress = clamp01(window.scrollY / (vh * 0.78));
+        const eased = smoothstep(rawProgress);
+        const castleOpacity = 1 - eased;
+        doorRevealScene.style.opacity = castleOpacity.toFixed(3);
+        doorRevealScene.style.transform = `translateY(${(-eased * 14).toFixed(1)}px)`;
       } else {
-        // Reset when out of view so it blooms again when returning
-        entry.target.classList.remove('in-view');
+        doorRevealScene.style.opacity = '1';
+        doorRevealScene.style.transform = 'translateY(0px)';
+      }
+    }
+
+    // 2. Gradual scroll-linked fade-in (approaching) & fade-out (leaving) for all ceremony pages
+    eventSections.forEach((sec, idx) => {
+      const stage = sec.querySelector('.event-stage');
+      if (!stage) return;
+      const rect = stage.getBoundingClientRect();
+
+      // Gradual fade-in only as page rises well into view (86% -> 40% of viewport height)
+      // Ensures the next invitation doesn't appear on the current page until scrolled toward it
+      let enterRaw = (vh * 0.86 - rect.top) / (vh * 0.46);
+      // Ensure final ceremony section reaches full clarity cleanly at bottom of page even on tall monitors
+      if (idx === eventSections.length - 1 && nearBottomProgress > 0) {
+        enterRaw = Math.max(enterRaw, nearBottomProgress);
+      }
+      const enterEased = smoothstep(enterRaw);
+
+      // Gradual fade-out as page text scrolls past top reading zone (15% vh down through off-top)
+      const fadeSpan = Math.max(rect.height * 0.72, vh * 0.42);
+      const exitRaw = (rect.top + fadeSpan - vh * 0.15) / fadeSpan;
+      const exitEased = smoothstep(exitRaw);
+
+      const opacity = Math.min(enterEased, exitEased);
+      stage.style.opacity = opacity.toFixed(3);
+
+      const lift = (1 - enterEased) * 20 - (1 - exitEased) * 14;
+      const scale = 0.95 + opacity * 0.05;
+      stage.style.transform = `translateY(${lift.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+
+      const terraceLayer = sec.querySelector('.sunset-terrace-layer');
+      if (terraceLayer) {
+        terraceLayer.style.opacity = opacity.toFixed(3);
+      }
+
+      if (opacity > 0.08) {
+        sec.classList.add('in-view');
+      } else {
+        sec.classList.remove('in-view');
       }
     });
-  }, observerOptions);
 
-  sections.forEach(sec => observer.observe(sec));
+    // 3. Gradual fade-in / fade-out on delicate golden line borders
+    dividers.forEach(div => {
+      const rect = div.getBoundingClientRect();
+      const enter = smoothstep((vh * 0.96 - rect.top) / (vh * 0.34));
+      const exit = smoothstep((rect.bottom - vh * 0.04) / (vh * 0.24));
+      const op = Math.min(enter, exit);
+      div.style.opacity = op.toFixed(3);
+      div.style.transform = `translateY(${((1 - enter) * 8).toFixed(1)}px)`;
+    });
+
+    // 4. Synchronize floating ceremony nav active pill with section nearest viewport center
+    const mid = vh * 0.45;
+    let bestSec = sections[0];
+    let bestDist = Infinity;
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const dist = Math.abs(center - mid);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestSec = sec;
+      }
+    });
+    if (bestSec) {
+      const id = bestSec.id;
+      navPills.forEach(pill => {
+        if (pill.getAttribute('data-target') === id) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+    }
+  }
+
+  function scheduleUpdate() {
+    if (!rafScheduled) {
+      rafScheduled = true;
+      requestAnimationFrame(updateScrollTransitions);
+    }
+  }
+
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate, { passive: true });
+  updateScrollTransitions();
 });
 </script>
 </body>
