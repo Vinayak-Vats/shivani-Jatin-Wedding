@@ -817,251 +817,6 @@ body {
 }
 
 /* ============================================================
-   ROYAL HANGING LANTERNS & BELLS (LIVELY GRAPHICAL MOTION)
-   Dynamically appears ONLY when on Ramayan Path page.
-   Smoothly retracts & disappears when moving to next page.
-   ============================================================ */
-.ramayan-lantern-suite {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 6;
-  overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-55px);
-  transition: opacity 0.75s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.75s;
-}
-
-#section-ramayan.in-view .ramayan-lantern-suite {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.lantern-cluster {
-  position: absolute;
-  top: -15px;
-  display: flex;
-  align-items: flex-start;
-  pointer-events: none;
-}
-
-.lantern-cluster-left {
-  left: clamp(8px, 3.5vw, 52px);
-  transform-origin: top center;
-  animation: lanternSwayLeft 4.4s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
-}
-
-.lantern-cluster-right {
-  right: clamp(8px, 3.5vw, 52px);
-  transform-origin: top center;
-  animation: lanternSwayRight 4.7s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
-}
-
-.royal-lantern-img {
-  display: block;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  filter: drop-shadow(0 12px 28px rgba(255, 180, 70, 0.5)) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.45));
-  transition: transform 0.3s ease;
-}
-
-/* Primary Foreground Lantern */
-.royal-lantern-img.lantern-primary {
-  width: clamp(96px, 11vw, 155px);
-  height: auto;
-  position: relative;
-  z-index: 3;
-}
-
-/* Secondary Background Sister Lantern (gives depth and royal layering) */
-.royal-lantern-img.lantern-secondary {
-  width: clamp(70px, 8vw, 110px);
-  height: auto;
-  position: relative;
-  z-index: 2;
-  margin-top: -18px;
-  opacity: 0.88;
-  filter: drop-shadow(0 8px 18px rgba(255, 160, 50, 0.38)) brightness(0.96);
-  transform-origin: top center;
-  animation: lanternSwaySecondary 5.2s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
-}
-
-.lantern-cluster-left .lantern-secondary {
-  margin-left: -24px;
-}
-
-.lantern-cluster-right .lantern-secondary {
-  margin-right: -24px;
-  order: -1;
-}
-
-/* Atmospheric candlelight halo behind the lanterns */
-.lantern-glow {
-  position: absolute;
-  top: 42px;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 195, 90, 0.42) 0%, rgba(255, 150, 50, 0.16) 48%, transparent 74%);
-  pointer-events: none;
-  z-index: 1;
-  animation: lanternGlowPulse 3.5s ease-in-out infinite alternate;
-}
-
-.lantern-cluster-left .lantern-glow {
-  left: 10px;
-}
-
-.lantern-cluster-right .lantern-glow {
-  right: 10px;
-}
-
-@keyframes lanternSwayLeft {
-  0% {
-    transform: rotate(-6.5deg);
-  }
-  100% {
-    transform: rotate(6.5deg);
-  }
-}
-
-@keyframes lanternSwayRight {
-  0% {
-    transform: rotate(6.5deg);
-  }
-  100% {
-    transform: rotate(-6.5deg);
-  }
-}
-
-@keyframes lanternSwaySecondary {
-  0% {
-    transform: rotate(5deg) scale(0.98);
-  }
-  100% {
-    transform: rotate(-5deg) scale(1.02);
-  }
-}
-
-@keyframes lanternGlowPulse {
-  0% {
-    opacity: 0.7;
-    transform: scale(0.92);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-}
-
-/* Sacred Golden Temple Bells (Mandir Ghanti with Lively Swing) */
-.bell-hanging {
-  position: absolute;
-  top: -14px;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.bell-hanging-left {
-  left: clamp(90px, 14vw, 210px);
-  transform-origin: top center;
-  animation: bellChimeLeft 3.4s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
-}
-
-.bell-hanging-right {
-  right: clamp(90px, 14vw, 210px);
-  transform-origin: top center;
-  animation: bellChimeRight 3.7s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
-}
-
-.royal-bell-img {
-  display: block;
-  width: clamp(84px, 9vw, 126px);
-  height: auto;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  filter: drop-shadow(0 12px 26px rgba(255, 185, 80, 0.55)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-  transition: transform 0.3s ease;
-}
-
-.bell-glow {
-  position: absolute;
-  top: 48px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 205, 95, 0.35) 0%, rgba(255, 140, 50, 0.12) 50%, transparent 72%);
-  pointer-events: none;
-  z-index: 1;
-  animation: lanternGlowPulse 3.4s ease-in-out infinite alternate;
-}
-
-@keyframes bellChimeLeft {
-  0% {
-    transform: rotate(-8.5deg);
-  }
-  100% {
-    transform: rotate(8.5deg);
-  }
-}
-
-@keyframes bellChimeRight {
-  0% {
-    transform: rotate(8.5deg);
-  }
-  100% {
-    transform: rotate(-8.5deg);
-  }
-}
-
-@media (max-width: 768px) {
-  .lantern-cluster-left {
-    left: 2px;
-    top: -10px;
-  }
-  .lantern-cluster-right {
-    right: 2px;
-    top: -10px;
-  }
-  .royal-lantern-img.lantern-primary {
-    width: 66px;
-  }
-  .royal-lantern-img.lantern-secondary {
-    display: none; /* Keep mobile view clean, spacious & centered */
-  }
-  .lantern-glow {
-    width: 80px;
-    height: 80px;
-    top: 25px;
-  }
-  .bell-hanging-left {
-    left: clamp(44px, 13vw, 70px);
-    top: -10px;
-  }
-  .bell-hanging-right {
-    right: clamp(44px, 13vw, 70px);
-    top: -10px;
-  }
-  .royal-bell-img {
-    width: clamp(42px, 10.5vw, 54px);
-  }
-  .bell-glow {
-    width: 65px;
-    height: 65px;
-    top: 22px;
-  }
-}
-
-/* ============================================================
    TYPOGRAPHY & CONTENT CONTAINER (BALANCED SPACING & MARGINS)
    ============================================================ */
 .event-stage {
@@ -1877,7 +1632,7 @@ body {
 }
 
 #section-ramayan {
-  padding: clamp(68px, 9vh, 92px) 24px 24px !important;
+  padding: clamp(44px, 6vh, 68px) 24px 24px !important;
 }
 
 #section-sangeet {
@@ -1929,7 +1684,7 @@ body {
   }
 
   #section-ramayan {
-    padding: 64px 26px 20px !important;
+    padding: 36px 26px 20px !important;
   }
 
   #section-sangeet {
@@ -1999,9 +1754,80 @@ body {
   }
 }
 
+/* ============================================================
+   FLOATING ROYAL MUSIC TOGGLE BUTTON
+   ============================================================ */
+.btn-music-toggle {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 120;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(45, 6, 14, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 210, 119, 0.5);
+  color: var(--gold-antique);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(255, 210, 119, 0.15);
+  transition: opacity 0.4s ease, transform 0.25s ease, background 0.25s ease;
+  pointer-events: auto;
+}
+
+.btn-music-toggle:hover {
+  transform: scale(1.08);
+  background: rgba(95, 12, 28, 0.88);
+  border-color: #ffffff;
+}
+
+.btn-music-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+body.doors-locked .btn-music-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-music-toggle.muted .icon-sound-on,
+.btn-music-toggle:not(.muted) .icon-sound-off {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .btn-music-toggle {
+    bottom: 14px;
+    left: 14px;
+    width: 34px;
+    height: 34px;
+  }
+  .btn-music-toggle svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 </style>
 </head>
 <body class="doors-locked">
+  <!-- Background Wedding Audio Track -->
+  <audio id="weddingAudio" preload="auto" loop playsinline>
+    <source src="images/janam_janam_vinayak.mp4" type="audio/mp4" />
+  </audio>
+
+  <!-- Subtle Floating Music Control -->
+  <button class="btn-music-toggle" id="btnMusicToggle" type="button" onclick="toggleWeddingAudio(event)" aria-label="Toggle Background Music" title="Toggle Music">
+    <svg class="icon-sound-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <svg class="icon-sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  </button>
+
   <!-- Fixed Global Background Image: Single continuous background across all pages -->
   <div class="global-fixed-bg" id="globalFixedBg" aria-hidden="true"></div>
 
@@ -2106,33 +1932,6 @@ body {
 
   <!-- Minute Sacred Flower Showering Canvas (Pushpa Vrishti for Ramayan Path) -->
   <canvas id="ramayanFlowerShower" class="ramayan-flower-canvas" aria-hidden="true"></canvas>
-
-  <!-- Royal Hanging Lantern & Sacred Bells Suite (Authentic glowing lanterns and temple bells framing Ramayan Path) -->
-  <div class="ramayan-lantern-suite" aria-hidden="true">
-    <!-- Left Lantern Duo -->
-    <div class="lantern-cluster lantern-cluster-left">
-      <div class="lantern-glow"></div>
-      <img src="image/lantern.png" class="royal-lantern-img lantern-secondary" alt="" />
-      <img src="image/lantern.png" class="royal-lantern-img lantern-primary" alt="" />
-    </div>
-
-    <!-- Sacred Golden Temple Bells (Left & Right Mid-Canopy) -->
-    <div class="bell-hanging bell-hanging-left">
-      <div class="bell-glow"></div>
-      <img src="image/Bells.png" class="royal-bell-img" alt="" />
-    </div>
-    <div class="bell-hanging bell-hanging-right">
-      <div class="bell-glow"></div>
-      <img src="image/Bells.png" class="royal-bell-img" alt="" />
-    </div>
-
-    <!-- Right Lantern Duo -->
-    <div class="lantern-cluster lantern-cluster-right">
-      <div class="lantern-glow"></div>
-      <img src="image/lantern.png" class="royal-lantern-img lantern-secondary" alt="" />
-      <img src="image/lantern.png" class="royal-lantern-img lantern-primary" alt="" />
-    </div>
-  </div>
 
   <div class="event-stage">
     <!-- Royal Floral Motif Accent -->
@@ -2494,13 +2293,109 @@ body {
 <script>
 // 1. ROYAL PALACE 3D DOORS -> 2s GRAPHIC GANESHA -> CASTLE & SCROLL UNLOCK
 const introSection = document.getElementById('intro');
+const weddingAudio = document.getElementById('weddingAudio');
+const btnMusicToggle = document.getElementById('btnMusicToggle');
 let doorsOpened = false;
 let scrollUnlocked = false;
+let userMutedAudio = false;
+let audioShouldBePlaying = false;
+
+function updateMusicToggleUI(isPlaying) {
+  if (!btnMusicToggle) return;
+  if (isPlaying && !userMutedAudio) {
+    btnMusicToggle.classList.remove('muted');
+  } else {
+    btnMusicToggle.classList.add('muted');
+  }
+}
+
+function playWeddingAudio() {
+  if (!weddingAudio || userMutedAudio || document.hidden) return;
+  audioShouldBePlaying = true;
+  const playPromise = weddingAudio.play();
+  if (playPromise && typeof playPromise.then === 'function') {
+    playPromise.then(() => {
+      updateMusicToggleUI(true);
+    }).catch(() => {
+      updateMusicToggleUI(false);
+    });
+  } else {
+    updateMusicToggleUI(true);
+  }
+}
+
+function pauseWeddingAudio(resetTrack = false) {
+  if (!weddingAudio) return;
+  weddingAudio.pause();
+  if (resetTrack) {
+    weddingAudio.currentTime = 0;
+  }
+  updateMusicToggleUI(false);
+}
+
+function toggleWeddingAudio(event) {
+  if (event) event.stopPropagation();
+  if (!weddingAudio) return;
+  if (weddingAudio.paused || userMutedAudio) {
+    userMutedAudio = false;
+    playWeddingAudio();
+  } else {
+    userMutedAudio = true;
+    audioShouldBePlaying = false;
+    pauseWeddingAudio(false);
+  }
+}
+
+// Replay automatically once completed
+if (weddingAudio) {
+  weddingAudio.addEventListener('ended', () => {
+    if (!userMutedAudio && !document.hidden) {
+      weddingAudio.currentTime = 0;
+      playWeddingAudio();
+    }
+  });
+}
+
+// Stop audio immediately when switching tabs, minimizing, losing focus, or closing browser
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    pauseWeddingAudio(false);
+  } else if (doorsOpened && audioShouldBePlaying && !userMutedAudio) {
+    playWeddingAudio();
+  }
+});
+
+window.addEventListener('blur', () => {
+  pauseWeddingAudio(false);
+});
+
+window.addEventListener('focus', () => {
+  if (doorsOpened && audioShouldBePlaying && !userMutedAudio && !document.hidden) {
+    playWeddingAudio();
+  }
+});
+
+document.addEventListener('freeze', () => {
+  pauseWeddingAudio(true);
+});
+
+window.addEventListener('pagehide', () => {
+  audioShouldBePlaying = false;
+  pauseWeddingAudio(true);
+});
+
+window.addEventListener('beforeunload', () => {
+  audioShouldBePlaying = false;
+  pauseWeddingAudio(true);
+});
 
 function openPalaceDoors(immediateScroll = false) {
   if (doorsOpened) return;
   doorsOpened = true;
   introSection.classList.add('opened');
+
+  // Start background wedding song synchronously inside the user tap/click gesture
+  playWeddingAudio();
 
   // Step 1: Doors part open -> Ganesha_page.png appears in graphic style over single background
   setTimeout(() => {
