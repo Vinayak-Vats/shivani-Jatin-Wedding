@@ -135,7 +135,7 @@ body {
   background-repeat: no-repeat;
   background-size: 200% 100%;
   backface-visibility: hidden;
-  transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 15;
   filter: brightness(1.22) contrast(1.08) saturate(1.15);
   box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.25), 0 0 20px rgba(0, 0, 0, 0.35);
@@ -2908,16 +2908,16 @@ function openPalaceDoors(immediateScroll = false) {
   // Start background wedding song synchronously inside the user tap/click gesture
   playWeddingAudio();
 
-  // Step 1: Doors part open slowly (1.5s) -> Ganesha_page.png appears in graphic style
+  // Step 1: Doors part open slowly (2.5s) -> Ganesha_page.png appears in graphic style
   setTimeout(() => {
     introSection.classList.add('ganesha-active');
-  }, 900);
+  }, 1400);
 
   // Step 2: Hold Ganesha darshan clearly for 2 seconds, then smoothly dissolve out
   setTimeout(() => {
     introSection.classList.remove('ganesha-active');
     introSection.classList.add('ganesha-exiting');
-  }, 2900);
+  }, 3400);
 
   // Step 3: Reveal Castle page over the same single fixed background & unlock scrolling
   setTimeout(() => {
@@ -2929,7 +2929,7 @@ function openPalaceDoors(immediateScroll = false) {
     if (window.initSkyCrackers) {
       window.initSkyCrackers();
     }
-  }, 3300);
+  }, 3800);
 }
 
 // ============================================================
