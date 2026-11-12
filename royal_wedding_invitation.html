@@ -93,7 +93,7 @@ body {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background-image: url('image/background_orig.png');
+  background-image: url('image/background_clean.png');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -967,12 +967,13 @@ body {
   font-size: clamp(28px, 4.5vw, 42px);
   font-weight: 700;
   letter-spacing: 0.22em;
-  color: #fff8dc !important;
+  color: #fff9d6 !important;
   text-transform: uppercase;
   text-shadow:
-    0 2px 6px rgba(24, 6, 12, 0.92),
-    0 0 14px rgba(255, 232, 145, 0.85),
-    0 0 28px rgba(255, 200, 80, 0.62) !important;
+    0 2px 4px rgba(12, 2, 8, 0.98),
+    0 4px 14px rgba(12, 2, 8, 0.92),
+    0 0 18px rgba(255, 226, 128, 0.92),
+    0 0 36px rgba(255, 190, 65, 0.72) !important;
 }
 
 /* 4. Bride & Groom's Names: The main visual highlight! Beautiful flowing calligraphy in elegant soft gold */
@@ -1665,6 +1666,7 @@ body {
    ============================================================ */
 #section-ramayan,
 #section-sangeet,
+#section-haldi,
 #section-wedding {
   display: flex !important;
   flex-direction: column !important;
@@ -1682,7 +1684,8 @@ body {
   padding: clamp(44px, 6vh, 68px) 24px 24px !important;
 }
 
-#section-sangeet {
+#section-sangeet,
+#section-haldi {
   justify-content: flex-start !important;
   min-height: 96vh !important;
   min-height: 96dvh !important;
@@ -1698,6 +1701,7 @@ body {
 
 #section-ramayan .event-stage,
 #section-sangeet .event-stage,
+#section-haldi .event-stage,
 #section-wedding .event-stage {
   width: 100%;
   max-width: 540px;
@@ -1715,8 +1719,11 @@ body {
 }
 
 #section-sangeet .event-stage,
+#section-haldi .event-stage,
 #section-wedding .event-stage {
   margin: 0 auto !important;
+  background: radial-gradient(ellipse at center, rgba(22, 4, 14, 0.36) 0%, rgba(22, 4, 14, 0.16) 58%, transparent 82%);
+  border-radius: 28px;
 }
 
 #intro .door-reveal-scene {
@@ -1726,6 +1733,7 @@ body {
 @media (max-width: 768px) {
   #section-ramayan,
   #section-sangeet,
+  #section-haldi,
   #section-wedding {
     min-height: 92dvh !important;
   }
@@ -1734,7 +1742,8 @@ body {
     padding: 36px 26px 20px !important;
   }
 
-  #section-sangeet {
+  #section-sangeet,
+  #section-haldi {
     min-height: 98dvh !important;
     padding: 36px 26px clamp(190px, 32dvh, 250px) !important;
   }
@@ -1746,6 +1755,7 @@ body {
 
   #section-ramayan .event-stage,
   #section-sangeet .event-stage,
+  #section-haldi .event-stage,
   #section-wedding .event-stage {
     padding: 18px 10px !important;
     gap: 5px;
@@ -1892,13 +1902,13 @@ body.doors-locked .btn-music-toggle {
   width: 100%;
   padding: clamp(38px, 5.5vh, 52px) clamp(26px, 5vw, 44px);
   border-radius: 20px;
-  background: linear-gradient(155deg, rgba(48, 16, 30, 0.36) 0%, rgba(84, 28, 46, 0.26) 55%, rgba(44, 14, 26, 0.38) 100%);
+  background: linear-gradient(155deg, rgba(72, 22, 42, 0.40) 0%, rgba(116, 40, 58, 0.28) 55%, rgba(68, 20, 38, 0.42) 100%);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(223, 183, 108, 0.45);
+  border: 1px solid rgba(223, 183, 108, 0.52);
   box-shadow:
     0 20px 50px rgba(24, 6, 16, 0.32),
-    inset 0 0 0 6px rgba(223, 183, 108, 0.10);
+    inset 0 0 0 6px rgba(223, 183, 108, 0.12);
   text-align: center;
   overflow: hidden;
 }
@@ -1909,9 +1919,9 @@ body.doors-locked .btn-music-toggle {
   width: clamp(128px, 28vw, 185px);
   height: auto;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.92;
-  filter: drop-shadow(0 4px 12px rgba(25, 8, 16, 0.25));
+  z-index: 2;
+  opacity: 1;
+  filter: saturate(1.2) contrast(1.04) drop-shadow(0 4px 12px rgba(25, 8, 16, 0.30));
 }
 
 .save-date-flower-tl {
@@ -1936,8 +1946,8 @@ body.doors-locked .btn-music-toggle {
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(250, 226, 162, 0.9);
-  margin-bottom: 4px;
+  color: rgba(250, 226, 162, 0.92);
+  margin-bottom: 14px;
   text-shadow: 0 1px 6px rgba(20, 6, 12, 0.65);
 }
 
@@ -1950,7 +1960,7 @@ body.doors-locked .btn-music-toggle {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 10px rgba(24, 6, 12, 0.72)) drop-shadow(0 0 14px rgba(255, 224, 130, 0.45));
-  margin: 2px 0 4px;
+  margin: 6px 0 8px;
 }
 
 .save-date-couple {
@@ -2134,10 +2144,6 @@ body.doors-locked .btn-music-toggle {
 
   <!-- Cover Copy on Closed Doors -->
   <div class="door-front-copy">
-    <div class="door-welcome-text">
-      Welcome to celebration of love, tradition and togetherness
-    </div>
-    
     <button class="btn-open-palace" id="btn-open-palace" onclick="openPalaceDoors(false)">
       Open The Door
     </button>
@@ -2211,6 +2217,10 @@ body.doors-locked .btn-music-toggle {
   <a href="#section-sangeet" class="nav-pill" data-target="section-sangeet" title="Sangeet & Jaggo">
     <span class="nav-dot"></span>
     <span class="nav-label">Sangeet & Jaggo</span>
+  </a>
+  <a href="#section-haldi" class="nav-pill" data-target="section-haldi" title="Haldi & Mehndi">
+    <span class="nav-dot"></span>
+    <span class="nav-label">Haldi & Mehndi</span>
   </a>
   <a href="#section-wedding" class="nav-pill" data-target="section-wedding" title="Royal Wedding">
     <span class="nav-dot"></span>
@@ -2286,7 +2296,7 @@ body.doors-locked .btn-music-toggle {
       <!-- Venue Details -->
       <div class="program-venue-block">
         <div class="venue-kicker-tag">AT</div>
-        <div class="venue-main-title">SHREE SNATAN DHARAM MANDIR</div>
+        <div class="venue-main-title">SHREE SANATAN DHARAM MANDIR</div>
         <div class="venue-sub-address">(DHARAMSHALA) · PHASE-4, MOHALI</div>
       </div>
     </div>
@@ -2451,6 +2461,73 @@ body.doors-locked .btn-music-toggle {
       </div>
     </div>
 </div>
+</section>
+
+<div class="wedding-ornate-divider" aria-hidden="true">
+  <svg class="ornate-divider-svg" viewBox="0 0 600 44">
+    <use href="#weddingOrnateBorder"/>
+  </svg>
+</div>
+
+<!-- ============================================================
+     FULL-SCREEN EVENT 2B: HALDI & MEHNDI
+     ============================================================ -->
+<section class="fullscreen-event-section" id="section-haldi">
+  <div class="section-bg-layer" aria-hidden="true"></div>
+
+  <!-- Haldi & Mehndi Sunset Terrace Artwork -->
+  <div class="sunset-terrace-layer" aria-hidden="true">
+    <img src="image/Haldi_background.jpeg" class="sunset-terrace-img" alt="" />
+  </div>
+
+  <div class="event-stage">
+    <!-- Royal Floral Motif Accent -->
+    <div class="ceremony-top-flourish" aria-hidden="true">
+      <svg viewBox="0 0 100 20" style="width: 70px; height: 14px; margin-bottom: 6px;">
+        <path d="M10 10 C30 3 35 17 50 10 C65 3 70 17 90 10" fill="none" stroke="#ffd277" stroke-width="1.3"/>
+        <circle cx="50" cy="10" r="2.8" fill="#ffd277"/>
+      </svg>
+    </div>
+    <div class="ceremony-title-banner">
+      <h2 class="ceremony-title-heading">HALDI &amp; MEHNDI</h2>
+    </div>
+
+    <div class="invite-pleasure-text" style="margin-top: 4px;">
+      TO CELEBRATE THE FORTHCOMING WEDDING OF HER DAUGHTER
+    </div>
+
+    <!-- Couple Spotlight -->
+    <div class="couple-showcase">
+      <div class="couple-names-wrap">
+        <span class="script-name">Shivani</span>
+        <span class="with-connector">with</span>
+        <span class="script-name">Jatin</span>
+      </div>
+    </div>
+
+    <!-- Aligned Program Box -->
+    <div class="event-program-box">
+      <div class="program-date-title">ON SUNDAY, 29TH NOVEMBER 2026</div>
+      <div class="program-schedule-list">
+        <div class="schedule-item">
+          <span class="schedule-item-label">HALDI (MORNING)</span>
+          <span class="schedule-item-time">10:00 AM</span>
+        </div>
+
+        <div class="schedule-item" style="margin-top: 4px;">
+          <span class="schedule-item-label">MEHNDI (EVENING)</span>
+          <span class="schedule-item-time">5:00 PM</span>
+        </div>
+      </div>
+
+      <!-- Venue Details -->
+      <div class="program-venue-block">
+        <div class="venue-kicker-tag">VENUE:</div>
+        <div class="venue-main-title">AT RESIDENCE</div>
+        <div class="venue-sub-address">#509, PHASE-4, MOHALI</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <div class="wedding-ornate-divider" aria-hidden="true">
@@ -2633,7 +2710,7 @@ body.doors-locked .btn-music-toggle {
             <div class="save-date-info">
               <div class="save-date-event">Bhog, Kirtan &amp; Lunch</div>
               <div class="save-date-time">Kirtan 10:00 AM &bull; Lunch 1:00 PM</div>
-              <div class="save-date-venue">Shree Snatan Dharam Mandir, Phase-4, Mohali</div>
+              <div class="save-date-venue">Shree Sanatan Dharam Mandir, Phase-4, Mohali</div>
             </div>
           </div>
 
@@ -2647,6 +2724,19 @@ body.doors-locked .btn-music-toggle {
               <div class="save-date-event">Jaggo &amp; Sangeet</div>
               <div class="save-date-time">Jaggo 5:00 PM &bull; Sangeet 7:00 PM</div>
               <div class="save-date-venue">Residence (#509, Phase-4, Mohali) &amp; Hotel Maya, Sec-35, Chandigarh</div>
+            </div>
+          </div>
+
+          <div class="save-date-row">
+            <div class="save-date-badge">
+              <span class="save-date-day">29</span>
+              <span class="save-date-month">Nov 2026</span>
+              <span class="save-date-weekday">Sunday</span>
+            </div>
+            <div class="save-date-info">
+              <div class="save-date-event">Haldi &amp; Mehndi</div>
+              <div class="save-date-time">Haldi 10:00 AM &bull; Mehndi 5:00 PM</div>
+              <div class="save-date-venue">Residence: #509, Phase-4, Mohali</div>
             </div>
           </div>
 
@@ -2815,7 +2905,8 @@ function openPalaceDoors(immediateScroll = false) {
     ['#ffd866', '#ffea9f', '#ffffff', '#ffe0b2', '#ffaa33']  // Golden Starlight
   ];
 
-  function createSkyCrackersEngine(canvasId, observeEl, canStartFn) {
+  function createSkyCrackersEngine(canvasId, observeEl, canStartFn, options) {
+    const dense = !!(options && options.dense);
     const canvas = document.getElementById(canvasId);
     if (!canvas) return null;
     const ctx = canvas.getContext('2d');
@@ -2926,7 +3017,9 @@ function openPalaceDoors(immediateScroll = false) {
     }
 
     function createBurst(x, y, palette) {
-      const count = Math.floor(Math.random() * 30 + 45);
+      const count = dense
+        ? Math.floor(Math.random() * 35 + 55)
+        : Math.floor(Math.random() * 30 + 45);
       for (let i = 0; i < count; i++) {
         const color = palette[Math.floor(Math.random() * palette.length)];
         particles.push(new Particle(x, y, color));
@@ -2966,12 +3059,17 @@ function openPalaceDoors(immediateScroll = false) {
 
     function scheduleNextLaunch() {
       if (!isRunning) return;
-      const delay = Math.random() * 1400 + 1600;
+      const delay = dense
+        ? Math.random() * 600 + 650
+        : Math.random() * 1400 + 1600;
       launchTimer = setTimeout(() => {
         if (isRunning) {
           launchCracker();
-          if (Math.random() > 0.5) {
-            setTimeout(() => { if (isRunning) launchCracker(); }, 350);
+          if (Math.random() > (dense ? 0.3 : 0.5)) {
+            setTimeout(() => { if (isRunning) launchCracker(); }, 280);
+          }
+          if (dense && Math.random() > 0.55) {
+            setTimeout(() => { if (isRunning) launchCracker(); }, 560);
           }
           scheduleNextLaunch();
         }
@@ -2986,9 +3084,13 @@ function openPalaceDoors(immediateScroll = false) {
       animId = requestAnimationFrame(loop);
 
       if (withSalvo) {
-        setTimeout(() => { if (isRunning) launchCracker(width * 0.28, height * 0.22); }, 400);
-        setTimeout(() => { if (isRunning) launchCracker(width * 0.72, height * 0.20); }, 900);
-        setTimeout(() => { if (isRunning) launchCracker(width * 0.50, height * 0.16); }, 1400);
+        setTimeout(() => { if (isRunning) launchCracker(width * 0.28, height * 0.22); }, 350);
+        setTimeout(() => { if (isRunning) launchCracker(width * 0.72, height * 0.20); }, 750);
+        setTimeout(() => { if (isRunning) launchCracker(width * 0.50, height * 0.16); }, 1150);
+        if (dense) {
+          setTimeout(() => { if (isRunning) launchCracker(width * 0.22, height * 0.30); }, 1450);
+          setTimeout(() => { if (isRunning) launchCracker(width * 0.78, height * 0.28); }, 1750);
+        }
       }
       scheduleNextLaunch();
     }
@@ -3029,7 +3131,8 @@ function openPalaceDoors(immediateScroll = false) {
   createSkyCrackersEngine(
     'weddingCrackersCanvas',
     document.getElementById('section-wedding'),
-    () => typeof doorsOpened !== 'undefined' ? doorsOpened : true
+    () => typeof doorsOpened !== 'undefined' ? doorsOpened : true,
+    { dense: true }
   );
 })();
 
@@ -3262,7 +3365,7 @@ function downloadCalEvent(type) {
   } else if (type === 'ramayan') {
     title = "Ramayan Path & Kirtan — Shivani & Jatin";
     description = "Saturday 21 Nov: Ramayan Path Arambh 9:00 AM at Residence. Sunday 22 Nov: Kirtan 10:00 AM & Lunch 1:00 PM at Mandir.";
-    location = "Shree Snatan Dharam Mandir (Dharamshala), Phase-4, Mohali";
+    location = "Shree Sanatan Dharam Mandir (Dharamshala), Phase-4, Mohali";
     start = "20261121T033000Z";
     end = "20261122T083000Z";
   }
@@ -3302,7 +3405,7 @@ function shareWhatsApp(type) {
   } else if (type === 'sangeet') {
     text = `🥁 *Sangeet Ceremony & Jaggo — Shivani & Jatin* 🥁%0A%0A🗓 *Saturday, 28th November 2026*%0A🪔 *Jaggo:* 5:00 PM at Residence (#509, Phase-4, Mohali)%0A💃 *Sangeet:* 7:00 PM%0A📍 *Venue:* Hotel Maya, Sector-35, Chandigarh%0A%0ACome dance, celebrate and make memories!`;
   } else if (type === 'ramayan') {
-    text = `🪔 *Ramayan Path & Kirtan — Shivani & Jatin* 🪔%0A%0A🗓 *Saturday, 21st Nov 2026:* Ramayan Path Arambh 9:00 AM (Residence: #509, Phase-4, Mohali)%0A🗓 *Sunday, 22nd Nov 2026:* Kirtan 10:00 AM | Lunch 1:00 PM%0A📍 *Venue:* Shree Snatan Dharam Mandir, Phase-4, Mohali%0A%0AYour presence is warmly awaited.`;
+    text = `🪔 *Ramayan Path & Kirtan — Shivani & Jatin* 🪔%0A%0A🗓 *Saturday, 21st Nov 2026:* Ramayan Path Arambh 9:00 AM (Residence: #509, Phase-4, Mohali)%0A🗓 *Sunday, 22nd Nov 2026:* Kirtan 10:00 AM | Lunch 1:00 PM%0A📍 *Venue:* Shree Sanatan Dharam Mandir, Phase-4, Mohali%0A%0AYour presence is warmly awaited.`;
   }
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
@@ -3464,7 +3567,7 @@ createSectionFlowerShower('ramayanFlowerShower', 'section-ramayan', [
 
 createSectionFlowerShower('sangeetFlowerShower', 'section-sangeet', [
   '#ffa726', '#ffb300', '#ffd54f', '#ec407a', '#f06292', '#f8bbd0', '#fff9c4', '#ff7096'
-], 50);
+], 115);
 </script>
 <script>
 // Smooth scroll-linked fade-out / fade-in transitions & nav synchronization
