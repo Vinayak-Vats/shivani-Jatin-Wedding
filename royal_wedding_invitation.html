@@ -818,21 +818,35 @@ body {
   }
 }
 
-/* Keep Haldi & Mehndi lower image compact at bottom, matching Sangeet & Jaggo proportions */
+/* Keep Haldi & Mehndi lower image edge-to-edge at bottom, compact height matching Sangeet & Jaggo */
 #section-haldi .sunset-terrace-img {
-  width: min(86vw, 540px);
-  height: auto;
-  max-height: 36vh;
-  object-fit: contain;
+  width: 100%;
+  height: clamp(210px, 35vh, 320px);
+  max-height: none;
+  object-fit: cover;
   object-position: center bottom;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 22%,
+    #000 52%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 22%,
+    #000 52%,
+    #000 100%
+  );
 }
 
 @media (max-width: 768px) {
   #section-haldi .sunset-terrace-img {
-    width: 96%;
-    height: auto;
-    max-height: 30dvh;
-    object-fit: contain;
+    width: 100%;
+    height: clamp(190px, 30dvh, 260px);
+    max-height: none;
+    object-fit: cover;
     object-position: center bottom;
   }
 }
@@ -2513,6 +2527,8 @@ body.doors-locked .btn-music-toggle {
   <div class="sunset-terrace-layer" aria-hidden="true">
     <img src="image/Haldi_background.jpeg" class="sunset-terrace-img" alt="" />
   </div>
+  <canvas id="haldiLanternsCanvas" class="sky-crackers-canvas" aria-hidden="true"></canvas>
+  <canvas id="haldiCrackersCanvas" class="sky-crackers-canvas" aria-hidden="true"></canvas>
 
   <div class="event-stage">
     <!-- Royal Floral Motif Accent -->
@@ -3168,14 +3184,20 @@ function openPalaceDoors(immediateScroll = false) {
     () => typeof doorsOpened !== 'undefined' ? doorsOpened : true,
     { dense: true }
   );
+
+  createSkyCrackersEngine(
+    'haldiCrackersCanvas',
+    document.getElementById('section-haldi'),
+    () => typeof doorsOpened !== 'undefined' ? doorsOpened : true
+  );
 })();
 
 // ============================================================
-// FLOATING SUNSET SKY LANTERNS FOR RAMAYAN PATH (DOWN -> UP)
+// FLOATING SUNSET SKY LANTERNS (DOWN -> UP)
 // ============================================================
-(function() {
-  const canvas = document.getElementById('ramayanLanternsCanvas');
-  const section = document.getElementById('section-ramayan');
+function createSkyLanternsEngine(canvasId, sectionId) {
+  const canvas = document.getElementById(canvasId);
+  const section = document.getElementById(sectionId);
   if (!canvas || !section) return;
 
   const ctx = canvas.getContext('2d');
@@ -3345,7 +3367,10 @@ function openPalaceDoors(immediateScroll = false) {
 
   observer.observe(section);
   window.addEventListener('resize', resize, { passive: true });
-})();
+}
+
+createSkyLanternsEngine('ramayanLanternsCanvas', 'section-ramayan');
+createSkyLanternsEngine('haldiLanternsCanvas', 'section-haldi');
 
 // Click or tap anywhere on the door page opens the doors
 document.addEventListener('click', () => {
