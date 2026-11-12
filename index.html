@@ -961,17 +961,18 @@ body {
   margin: 8px 0 10px;
 }
 
-.ceremony-title-heading {
+.ceremony-title-heading,
+.fullscreen-event-section .ceremony-title-heading {
   font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   font-size: clamp(28px, 4.5vw, 42px);
   font-weight: 700;
   letter-spacing: 0.22em;
-  color: #ffea9f;
+  color: #fff8dc !important;
   text-transform: uppercase;
   text-shadow:
-    0 2px 10px rgba(24, 6, 12, 0.85),
-    0 0 18px rgba(255, 226, 138, 0.58),
-    0 0 32px rgba(255, 195, 85, 0.34);
+    0 2px 6px rgba(24, 6, 12, 0.92),
+    0 0 14px rgba(255, 232, 145, 0.85),
+    0 0 28px rgba(255, 200, 80, 0.62) !important;
 }
 
 /* 4. Bride & Groom's Names: The main visual highlight! Beautiful flowing calligraphy in elegant soft gold */
@@ -2224,6 +2225,9 @@ body.doors-locked .btn-music-toggle {
 <section class="fullscreen-event-section" id="section-ramayan">
   <div class="section-bg-layer" aria-hidden="true"></div>
 
+  <!-- Floating Sunset Sky Lanterns (Rising Bottom-to-Top) -->
+  <canvas id="ramayanLanternsCanvas" class="sky-crackers-canvas" aria-hidden="true"></canvas>
+
   <!-- Minute Sacred Flower Showering Canvas (Pushpa Vrishti for Ramayan Path) -->
   <canvas id="ramayanFlowerShower" class="ramayan-flower-canvas" aria-hidden="true"></canvas>
 
@@ -2465,6 +2469,7 @@ body.doors-locked .btn-music-toggle {
   <div class="sunset-terrace-layer" aria-hidden="true">
     <img src="image/Sunset_terrace.png" class="sunset-terrace-img" alt="" />
   </div>
+  <canvas id="weddingCrackersCanvas" class="sky-crackers-canvas" aria-hidden="true"></canvas>
   <div class="section-chandelier-bar" aria-hidden="true">
     <svg class="chandelier-svg" viewBox="0 0 100 130">
       <line x1="50" y1="0" x2="50" y2="40" stroke="#d4a34b" stroke-width="2" stroke-dasharray="2,3"/>
@@ -2803,26 +2808,6 @@ function openPalaceDoors(immediateScroll = false) {
 // CELEBRATORY SKY CRACKERS / FIREWORKS SYSTEM (PAGE 1 MAHAL)
 // ============================================================
 (function() {
-  const canvas = document.getElementById('skyCrackersCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let width = 0;
-  let height = 0;
-  let particles = [];
-  let rockets = [];
-  let animId = null;
-  let isRunning = false;
-  let launchTimer = null;
-
-  function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = canvas.clientWidth || window.innerWidth;
-    height = canvas.clientHeight || window.innerHeight;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    ctx.scale(dpr, dpr);
-  }
-
   // Palette: Festive Royal Gold, Radiant Champagne, and Warm Ruby Sparkles
   const colorPalettes = [
     ['#ffe58f', '#ffd700', '#ffc233', '#ffffff', '#fffae6'], // Royal 24k Gold
@@ -2830,183 +2815,398 @@ function openPalaceDoors(immediateScroll = false) {
     ['#ffd866', '#ffea9f', '#ffffff', '#ffe0b2', '#ffaa33']  // Golden Starlight
   ];
 
-  class Rocket {
-    constructor(startX, startY, targetX, targetY, colors) {
-      this.x = startX;
-      this.y = startY;
-      this.targetX = targetX;
-      this.targetY = targetY;
-      this.colors = colors;
-      const angle = Math.atan2(targetY - startY, targetX - startX);
-      const dist = Math.hypot(targetX - startX, targetY - startY);
-      const speed = dist / 38;
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.trail = [];
-      this.alive = true;
+  function createSkyCrackersEngine(canvasId, observeEl, canStartFn) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let particles = [];
+    let rockets = [];
+    let animId = null;
+    let isRunning = false;
+    let launchTimer = null;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = canvas.clientWidth || window.innerWidth;
+      height = canvas.clientHeight || window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-    update() {
-      this.trail.push({ x: this.x, y: this.y, alpha: 0.8 });
-      if (this.trail.length > 5) this.trail.shift();
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.vy < 0 && this.y <= this.targetY) {
-        this.alive = false;
-        createBurst(this.targetX, this.targetY, this.colors);
+
+    class Rocket {
+      constructor(startX, startY, targetX, targetY, colors) {
+        this.x = startX;
+        this.y = startY;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.colors = colors;
+        const angle = Math.atan2(targetY - startY, targetX - startX);
+        const dist = Math.hypot(targetX - startX, targetY - startY);
+        const speed = dist / 38;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.trail = [];
+        this.alive = true;
       }
-    }
-    draw(context) {
-      context.save();
-      for (let i = 0; i < this.trail.length; i++) {
-        const pt = this.trail[i];
-        const a = (i + 1) / this.trail.length * 0.7;
+      update() {
+        this.trail.push({ x: this.x, y: this.y, alpha: 0.8 });
+        if (this.trail.length > 5) this.trail.shift();
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.vy < 0 && this.y <= this.targetY) {
+          this.alive = false;
+          createBurst(this.targetX, this.targetY, this.colors);
+        }
+      }
+      draw(context) {
+        context.save();
+        for (let i = 0; i < this.trail.length; i++) {
+          const pt = this.trail[i];
+          const a = (i + 1) / this.trail.length * 0.7;
+          context.beginPath();
+          context.arc(pt.x, pt.y, 1.8, 0, Math.PI * 2);
+          context.fillStyle = `rgba(255, 230, 150, ${a})`;
+          context.fill();
+        }
         context.beginPath();
-        context.arc(pt.x, pt.y, 1.8, 0, Math.PI * 2);
-        context.fillStyle = `rgba(255, 230, 150, ${a})`;
+        context.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+        context.fillStyle = '#ffffff';
+        context.shadowColor = '#ffd700';
+        context.shadowBlur = 8;
         context.fill();
+        context.restore();
       }
-      context.beginPath();
-      context.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
-      context.fillStyle = '#ffffff';
-      context.shadowColor = '#ffd700';
-      context.shadowBlur = 8;
-      context.fill();
-      context.restore();
     }
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4.2 + 0.8;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.015 + 0.012;
+        this.gravity = 0.055;
+        this.friction = 0.965;
+        this.size = Math.random() * 2.2 + 1.2;
+        this.sparkle = Math.random() > 0.4;
+        this.sparklePhase = Math.random() * Math.PI;
+      }
+      update() {
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+        this.sparklePhase += 0.25;
+      }
+      draw(context) {
+        if (this.alpha <= 0) return;
+        context.save();
+        let a = this.alpha;
+        if (this.sparkle) {
+          a *= 0.65 + 0.35 * Math.sin(this.sparklePhase);
+        }
+        context.globalAlpha = Math.max(0, Math.min(1, a));
+        context.beginPath();
+        context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        context.fillStyle = this.color;
+        context.shadowColor = this.color;
+        context.shadowBlur = 6;
+        context.fill();
+        context.restore();
+      }
+    }
+
+    function createBurst(x, y, palette) {
+      const count = Math.floor(Math.random() * 30 + 45);
+      for (let i = 0; i < count; i++) {
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    function launchCracker(customX, customY) {
+      if (!width || !height) resize();
+      const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+      const targetX = customX !== undefined ? customX : width * (0.2 + Math.random() * 0.6);
+      const targetY = customY !== undefined ? customY : height * (0.12 + Math.random() * 0.28);
+      const startX = targetX + (Math.random() - 0.5) * 80;
+      const startY = height * 0.75;
+      rockets.push(new Rocket(startX, startY, targetX, targetY, palette));
+    }
+
+    function loop() {
+      if (!isRunning) return;
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const r = rockets[i];
+        r.update();
+        r.draw(ctx);
+        if (!r.alive) rockets.splice(i, 1);
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw(ctx);
+        if (p.alpha <= 0) particles.splice(i, 1);
+      }
+
+      animId = requestAnimationFrame(loop);
+    }
+
+    function scheduleNextLaunch() {
+      if (!isRunning) return;
+      const delay = Math.random() * 1400 + 1600;
+      launchTimer = setTimeout(() => {
+        if (isRunning) {
+          launchCracker();
+          if (Math.random() > 0.5) {
+            setTimeout(() => { if (isRunning) launchCracker(); }, 350);
+          }
+          scheduleNextLaunch();
+        }
+      }, delay);
+    }
+
+    function start(withSalvo) {
+      resize();
+      if (isRunning) return;
+      isRunning = true;
+      if (animId) cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(loop);
+
+      if (withSalvo) {
+        setTimeout(() => { if (isRunning) launchCracker(width * 0.28, height * 0.22); }, 400);
+        setTimeout(() => { if (isRunning) launchCracker(width * 0.72, height * 0.20); }, 900);
+        setTimeout(() => { if (isRunning) launchCracker(width * 0.50, height * 0.16); }, 1400);
+      }
+      scheduleNextLaunch();
+    }
+
+    function stop() {
+      isRunning = false;
+      if (animId) cancelAnimationFrame(animId);
+      if (launchTimer) clearTimeout(launchTimer);
+    }
+
+    if (observeEl) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) {
+            stop();
+          } else if (canStartFn()) {
+            start(true);
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(observeEl);
+    }
+
+    window.addEventListener('resize', resize, { passive: true });
+    return { start, stop };
   }
 
-  class Particle {
-    constructor(x, y, color) {
-      this.x = x;
-      this.y = y;
-      this.color = color;
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 4.2 + 0.8;
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.alpha = 1;
-      this.decay = Math.random() * 0.015 + 0.012;
-      this.gravity = 0.055;
-      this.friction = 0.965;
-      this.size = Math.random() * 2.2 + 1.2;
-      this.sparkle = Math.random() > 0.4;
-      this.sparklePhase = Math.random() * Math.PI;
-    }
-    update() {
-      this.vx *= this.friction;
-      this.vy *= this.friction;
-      this.vy += this.gravity;
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= this.decay;
-      this.sparklePhase += 0.25;
-    }
-    draw(context) {
-      if (this.alpha <= 0) return;
-      context.save();
-      let a = this.alpha;
-      if (this.sparkle) {
-        a *= 0.65 + 0.35 * Math.sin(this.sparklePhase);
-      }
-      context.globalAlpha = Math.max(0, Math.min(1, a));
-      context.beginPath();
-      context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      context.fillStyle = this.color;
-      context.shadowColor = this.color;
-      context.shadowBlur = 6;
-      context.fill();
-      context.restore();
-    }
+  const castleCrackers = createSkyCrackersEngine(
+    'skyCrackersCanvas',
+    document.getElementById('intro'),
+    () => introSection && introSection.classList.contains('castle-active')
+  );
+
+  window.initSkyCrackers = function() {
+    if (castleCrackers) castleCrackers.start(true);
+  };
+
+  createSkyCrackersEngine(
+    'weddingCrackersCanvas',
+    document.getElementById('section-wedding'),
+    () => typeof doorsOpened !== 'undefined' ? doorsOpened : true
+  );
+})();
+
+// ============================================================
+// FLOATING SUNSET SKY LANTERNS FOR RAMAYAN PATH (DOWN -> UP)
+// ============================================================
+(function() {
+  const canvas = document.getElementById('ramayanLanternsCanvas');
+  const section = document.getElementById('section-ramayan');
+  if (!canvas || !section) return;
+
+  const ctx = canvas.getContext('2d');
+  let width = 0;
+  let height = 0;
+  let lanterns = [];
+  let animId = null;
+  let isRunning = false;
+
+  // Sunset-matched warm paper & glow tones (peach, rose-apricot, warm amber)
+  const lanternTones = [
+    { top: 'rgba(255, 198, 138, 0.78)', mid: 'rgba(255, 168, 128, 0.86)', core: 'rgba(255, 240, 190, 0.96)', glow: 'rgba(255, 195, 118, 0.34)' },
+    { top: 'rgba(247, 174, 168, 0.76)', mid: 'rgba(255, 152, 136, 0.85)', core: 'rgba(255, 232, 178, 0.95)', glow: 'rgba(255, 172, 135, 0.32)' },
+    { top: 'rgba(255, 214, 152, 0.78)', mid: 'rgba(248, 180, 116, 0.86)', core: 'rgba(255, 246, 206, 0.96)', glow: 'rgba(255, 210, 128, 0.34)' }
+  ];
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.clientWidth || section.clientWidth || window.innerWidth;
+    height = canvas.clientHeight || section.clientHeight || window.innerHeight;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function createBurst(x, y, palette) {
-    const count = Math.floor(Math.random() * 30 + 45);
+  function createLantern(initialSpread) {
+    const depth = 0.45 + Math.random() * 0.65; // distant to near
+    const w = 16 * depth + Math.random() * 6;
+    const h = w * 1.38;
+    return {
+      x: Math.random() * width,
+      y: initialSpread ? Math.random() * (height + 80) - 40 : height + h + Math.random() * 60,
+      w,
+      h,
+      depth,
+      vy: -(0.35 + depth * 0.48 + Math.random() * 0.18),
+      swayAmp: 0.22 + Math.random() * 0.35,
+      swayFreq: 0.008 + Math.random() * 0.01,
+      phase: Math.random() * Math.PI * 2,
+      flickerPhase: Math.random() * Math.PI * 2,
+      baseAlpha: 0.45 + depth * 0.36,
+      tone: lanternTones[Math.floor(Math.random() * lanternTones.length)]
+    };
+  }
+
+  function seedLanterns() {
+    const count = Math.min(18, Math.max(11, Math.floor((width || window.innerWidth) / 55)));
+    lanterns = [];
     for (let i = 0; i < count; i++) {
-      const color = palette[Math.floor(Math.random() * palette.length)];
-      particles.push(new Particle(x, y, color));
+      lanterns.push(createLantern(true));
     }
   }
 
-  function launchCracker(customX, customY) {
-    if (!width || !height) resize();
-    const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
-    // Confine bursts to the upper sky above the palace domes (y: 12% to 40% of height)
-    const targetX = customX !== undefined ? customX : width * (0.2 + Math.random() * 0.6);
-    const targetY = customY !== undefined ? customY : height * (0.12 + Math.random() * 0.28);
-    const startX = targetX + (Math.random() - 0.5) * 80;
-    const startY = height * 0.75;
-    rockets.push(new Rocket(startX, startY, targetX, targetY, palette));
+  function drawLantern(l) {
+    const edgeFadeTop = Math.min(1, Math.max(0, (l.y + l.h) / (height * 0.18)));
+    const edgeFadeBot = Math.min(1, Math.max(0, (height + l.h - l.y) / (height * 0.14)));
+    const flicker = 0.92 + 0.08 * Math.sin(l.flickerPhase);
+    const alpha = l.baseAlpha * Math.min(edgeFadeTop, edgeFadeBot) * flicker;
+    if (alpha <= 0.01) return;
+
+    const tilt = Math.sin(l.phase) * 0.06;
+    ctx.save();
+    ctx.translate(l.x, l.y);
+    ctx.rotate(tilt);
+    ctx.globalAlpha = alpha;
+
+    // Soft sunset-matched halo
+    const haloR = l.h * 1.35;
+    const halo = ctx.createRadialGradient(0, l.h * 0.15, 1, 0, l.h * 0.15, haloR);
+    halo.addColorStop(0, l.tone.glow);
+    halo.addColorStop(1, 'rgba(255, 180, 120, 0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(0, l.h * 0.15, haloR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Lantern paper body (tapered rounded trapezoid)
+    const topHalf = l.w * 0.52;
+    const midHalf = l.w * 0.58;
+    const botHalf = l.w * 0.34;
+    const halfH = l.h * 0.5;
+
+    const bodyGrad = ctx.createLinearGradient(0, -halfH, 0, halfH);
+    bodyGrad.addColorStop(0, l.tone.top);
+    bodyGrad.addColorStop(0.55, l.tone.mid);
+    bodyGrad.addColorStop(1, l.tone.core);
+
+    ctx.beginPath();
+    ctx.moveTo(-topHalf, -halfH + 3);
+    ctx.quadraticCurveTo(0, -halfH - 4, topHalf, -halfH + 3);
+    ctx.quadraticCurveTo(midHalf + 2, 0, botHalf, halfH);
+    ctx.lineTo(-botHalf, halfH);
+    ctx.quadraticCurveTo(-midHalf - 2, 0, -topHalf, -halfH + 3);
+    ctx.closePath();
+    ctx.fillStyle = bodyGrad;
+    ctx.fill();
+
+    // Subtle vertical ribs
+    ctx.strokeStyle = 'rgba(195, 105, 70, 0.25)';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(-topHalf * 0.42, -halfH + 1);
+    ctx.quadraticCurveTo(-midHalf * 0.45, 0, -botHalf * 0.45, halfH);
+    ctx.moveTo(topHalf * 0.42, -halfH + 1);
+    ctx.quadraticCurveTo(midHalf * 0.45, 0, botHalf * 0.45, halfH);
+    ctx.stroke();
+
+    // Bottom rim & warm inner flame
+    ctx.strokeStyle = 'rgba(255, 224, 160, 0.65)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(0, halfH, botHalf, 2.2, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff9df';
+    ctx.beginPath();
+    ctx.arc(0, halfH - 2, Math.max(1.4, l.w * 0.1), 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
   }
 
   function loop() {
     if (!isRunning) return;
     ctx.clearRect(0, 0, width, height);
 
-    for (let i = rockets.length - 1; i >= 0; i--) {
-      const r = rockets[i];
-      r.update();
-      r.draw(ctx);
-      if (!r.alive) rockets.splice(i, 1);
-    }
+    for (let i = 0; i < lanterns.length; i++) {
+      const l = lanterns[i];
+      l.y += l.vy;
+      l.phase += l.swayFreq;
+      l.flickerPhase += 0.08;
+      l.x += Math.sin(l.phase) * l.swayAmp;
 
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.update();
-      p.draw(ctx);
-      if (p.alpha <= 0) particles.splice(i, 1);
+      drawLantern(l);
+
+      if (l.y < -l.h - 30) {
+        lanterns[i] = createLantern(false);
+      }
     }
 
     animId = requestAnimationFrame(loop);
   }
 
-  function scheduleNextLaunch() {
-    if (!isRunning) return;
-    // Launch random sky bursts every 1.6 to 3 seconds
-    const delay = Math.random() * 1400 + 1600;
-    launchTimer = setTimeout(() => {
-      if (isRunning) {
-        launchCracker();
-        // Occasional double firework burst
-        if (Math.random() > 0.5) {
-          setTimeout(() => { if (isRunning) launchCracker(); }, 350);
-        }
-        scheduleNextLaunch();
-      }
-    }, delay);
-  }
-
-  window.initSkyCrackers = function() {
+  function start() {
     resize();
+    if (!lanterns.length) seedLanterns();
+    if (isRunning) return;
     isRunning = true;
     if (animId) cancelAnimationFrame(animId);
     animId = requestAnimationFrame(loop);
+  }
 
-    // Initial grand celebratory salvo when doors swing open!
-    setTimeout(() => launchCracker(width * 0.3, height * 0.22), 700);
-    setTimeout(() => launchCracker(width * 0.7, height * 0.20), 1200);
-    setTimeout(() => launchCracker(width * 0.5, height * 0.16), 1800);
+  function stop() {
+    isRunning = false;
+    if (animId) cancelAnimationFrame(animId);
+  }
 
-    scheduleNextLaunch();
-  };
-
-  // Pause crackers when Page 1 is scrolled out of view to preserve battery & performance
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) {
-        isRunning = false;
-        if (animId) cancelAnimationFrame(animId);
-        if (launchTimer) clearTimeout(launchTimer);
-      } else if (introSection && introSection.classList.contains('castle-active')) {
-        if (!isRunning) {
-          isRunning = true;
-          animId = requestAnimationFrame(loop);
-          scheduleNextLaunch();
-        }
+      if (entry.isIntersecting) {
+        start();
+      } else {
+        stop();
       }
     });
-  }, { threshold: 0.2 });
+  }, { threshold: 0.1 });
 
-  observer.observe(document.getElementById('intro'));
+  observer.observe(section);
   window.addEventListener('resize', resize, { passive: true });
 })();
 
