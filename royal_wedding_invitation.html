@@ -818,6 +818,25 @@ body {
   }
 }
 
+/* Keep Haldi & Mehndi lower image compact at bottom, matching Sangeet & Jaggo proportions */
+#section-haldi .sunset-terrace-img {
+  width: min(86vw, 540px);
+  height: auto;
+  max-height: 36vh;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+@media (max-width: 768px) {
+  #section-haldi .sunset-terrace-img {
+    width: 96%;
+    height: auto;
+    max-height: 30dvh;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+}
+
 /* ============================================================
    TYPOGRAPHY & CONTENT CONTAINER (BALANCED SPACING & MARGINS)
    ============================================================ */
@@ -1684,7 +1703,13 @@ body {
   padding: clamp(44px, 6vh, 68px) 24px 24px !important;
 }
 
-#section-sangeet,
+#section-sangeet {
+  justify-content: center !important;
+  min-height: 96vh !important;
+  min-height: 96dvh !important;
+  padding: clamp(28px, 4vh, 44px) 24px clamp(140px, 22vh, 210px) !important;
+}
+
 #section-haldi {
   justify-content: flex-start !important;
   min-height: 96vh !important;
@@ -1718,7 +1743,12 @@ body {
   will-change: transform, opacity;
 }
 
-#section-sangeet .event-stage,
+#section-sangeet .event-stage {
+  margin: auto !important;
+  background: radial-gradient(ellipse at center, rgba(22, 4, 14, 0.36) 0%, rgba(22, 4, 14, 0.16) 58%, transparent 82%);
+  border-radius: 28px;
+}
+
 #section-haldi .event-stage,
 #section-wedding .event-stage {
   margin: 0 auto !important;
@@ -1742,7 +1772,11 @@ body {
     padding: 36px 26px 20px !important;
   }
 
-  #section-sangeet,
+  #section-sangeet {
+    min-height: 98dvh !important;
+    padding: 36px 26px clamp(130px, 22dvh, 180px) !important;
+  }
+
   #section-haldi {
     min-height: 98dvh !important;
     padding: 36px 26px clamp(190px, 32dvh, 250px) !important;
